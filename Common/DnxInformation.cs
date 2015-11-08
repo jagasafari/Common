@@ -5,19 +5,17 @@
 
     public static class DnxInformation
     {
-        public static string GetDnxPath()
-        {
-            return Path.GetDirectoryName(Process.GetCurrentProcess().Modules[0].FileName);
-        }
+        private const int DnxProcessModuleIndex = 0;
+        private const string DnuProgramName = "dnu.cmd";
 
-        public static string GetDnx()
-        {
-            return Path.Combine(GetDnxPath(), "dnx.exe");
-        }
+        public static string DnxPath
+            =>
+                Process.GetCurrentProcess().Modules[DnxProcessModuleIndex]
+                    .FileName;
 
-        public static string GetDnu()
-        {
-            return Path.Combine(GetDnxPath(), "dnu.cmd");
-        }
+        public static string DnuPath => Path.Combine(DnxDirectory, DnuProgramName);
+
+        private static string DnxDirectory
+            => Path.GetDirectoryName(DnxPath);
     }
 }
