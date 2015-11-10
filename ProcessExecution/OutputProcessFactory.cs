@@ -3,7 +3,7 @@
     using System.Diagnostics;
     using Model;
 
-    public class OutputProcessFactory
+    internal class OutputProcessFactory
     {
         public OutputProcessFactory(ProcessInstructions instructions)
         {
