@@ -1,4 +1,4 @@
-﻿namespace Common.ProcessExecution
+﻿namespace ProcessExecution
 {
     using System.Diagnostics;
     using System.Text;
@@ -10,15 +10,16 @@
 
         protected readonly Process ProcessInstance;
 
-        protected OutputProcessExecutor(OutputProcessFactory processFactory)
+        protected OutputProcessExecutor(Process process, ProcessInstructions instructions)
         {
-            ProcessInstance = processFactory.Create();
+            ProcessInstance = process;
+            Instructions = instructions;
             OutputBuilder = new StringBuilder();
         }
 
         public string Output => OutputBuilder.ToString();
 
-        public ProcessInstructions Instructions { get; set; }
+        protected ProcessInstructions Instructions { get; set; }
 
         public void Execute()
         {

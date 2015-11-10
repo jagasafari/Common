@@ -1,12 +1,13 @@
-﻿namespace Common.ProcessExecution
+﻿namespace ProcessExecution
 {
     using System;
+    using System.Diagnostics;
+    using Model;
 
     public class FinishingProcessExecutor : OutputProcessExecutor
     {
-        public FinishingProcessExecutor(
-            OutputProcessFactory processFactory)
-            : base(processFactory)
+        public FinishingProcessExecutor(Process process, ProcessInstructions instructions)
+            : base(process, instructions)
         {
         } 
 

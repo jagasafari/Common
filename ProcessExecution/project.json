@@ -5,7 +5,9 @@
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
-
+  "dependencies": {
+    "Microsoft.Framework.DependencyInjection": "1.0.0-beta8-15621"
+  },
   "frameworks": {
     "dnx451": { }
   }

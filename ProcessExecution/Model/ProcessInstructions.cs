@@ -1,4 +1,4 @@
-﻿namespace Common.ProcessExecution.Model
+﻿namespace ProcessExecution.Model
 {
     public class ProcessInstructions
     {

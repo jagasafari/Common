@@ -1,11 +1,13 @@
-﻿namespace Common.ProcessExecution
+﻿namespace ProcessExecution
 {
     using System;
+    using System.Diagnostics;
+    using Model;
 
     public class LivingProcessExecutor : OutputProcessExecutor, IDisposable
     {
-        public LivingProcessExecutor(OutputProcessFactory processFactory)
-            :base(processFactory)
+        public LivingProcessExecutor(Process process, ProcessInstructions instructions)
+            :base(process, instructions)
         {
         }
 

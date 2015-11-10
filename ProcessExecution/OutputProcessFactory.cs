@@ -1,22 +1,28 @@
-﻿namespace Common.ProcessExecution
+﻿namespace ProcessExecution
 {
     using System.Diagnostics;
     using Model;
 
     public class OutputProcessFactory
     {
+        public OutputProcessFactory(ProcessInstructions instructions)
+        {
+            _instructions = instructions;
+        }
+
         private ProcessStartInfo StartInfo => new ProcessStartInfo
         {
             UseShellExecute = false,
-            FileName = Instructions.Program,
-            Arguments = Instructions.Arguments,
+            FileName = _instructions.Program,
+            Arguments = _instructions.Arguments,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true
         };
 
-        public ProcessInstructions Instructions { get; set; }
+        private readonly ProcessInstructions _instructions;
 
         public Process Create() => new Process{StartInfo = StartInfo};
+
     }
 }
