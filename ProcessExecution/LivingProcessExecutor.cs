@@ -11,7 +11,7 @@
         {
         }
 
-        public void Dispose() => ProcessInstance.Kill();
+        public void Dispose() => ProcessInstance.Dispose();
 
     }
 }
