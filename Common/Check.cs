@@ -6,7 +6,7 @@
     {
         public static T NotNull< T >( T value )
         {
-            if(ReferenceEquals( value, null )) throw new ArgumentException();
+            if(ReferenceEquals( value, null )) throw new NullReferenceException();
             return value;
         }
     }

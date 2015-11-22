@@ -2,6 +2,8 @@
 {
     using System.Diagnostics;
     using System.Text;
+    using Common;
+    using Microsoft.Extensions.Logging;
     using Model;
 
     public abstract class OutputProcessExecutor
@@ -10,10 +12,14 @@
 
         protected readonly Process ProcessInstance;
 
-        protected OutputProcessExecutor(Process process, ProcessInstructions instructions)
+        protected readonly ILogger Logger;
+
+        protected OutputProcessExecutor(Process process,
+             ProcessInstructions instructions, ILogger logger)
         {
-            ProcessInstance = process;
-            Instructions = instructions;
+            ProcessInstance = Check.NotNull<Process>(process);
+            Instructions = Check.NotNull<ProcessInstructions>(instructions);
+            Logger = Check.NotNull<ILogger>(logger);
             OutputBuilder = new StringBuilder();
         }
 
@@ -24,10 +30,22 @@
         public void Execute()
         {
             ProcessInstance.OutputDataReceived +=
-                (sender, e) => { OutputBuilder.AppendLine(e.Data); };
+                (sender, e) =>
+                {
+                    var data = e?.Data??string.Empty;
+                    OutputBuilder.AppendLine(data);
+                    Logger.LogInformation(data);
+                };
             ProcessInstance.ErrorDataReceived +=
-                (sender, e) => { OutputBuilder.AppendLine(e.Data); };
-            ProcessInstance.Exited += (sender, e) => { };
+                (sender, e) =>
+                {
+                    var data = e?.Data??string.Empty;
+                    OutputBuilder.AppendLine(data);
+                    Logger.LogError(data);
+                };
+            ProcessInstance.Exited += (sender, e) => { 
+                Logger.LogInformation("process exited");
+            };
             ProcessInstance.EnableRaisingEvents = true;
 
             ProcessInstance.Start();
