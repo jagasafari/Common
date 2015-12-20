@@ -1,4 +1,4 @@
-﻿namespace Mailer.Model
+﻿namespace Common.Mailer.Model
 {
     public class MailConfiguration
     {

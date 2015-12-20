@@ -1,4 +1,4 @@
-﻿namespace Mailer
+﻿namespace Common.Mailer
 {
     using System;
     using System.Net;

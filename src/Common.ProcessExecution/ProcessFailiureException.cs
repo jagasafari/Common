@@ -1,4 +1,4 @@
-﻿namespace ProcessExecution
+﻿namespace Common.ProcessExecution
 {
     using System;
     using Model;

@@ -1,20 +1,20 @@
-﻿namespace ProcessExecution
+﻿namespace Common.ProcessExecution
 {
     using System.Diagnostics;
     using System.Text;
-    using Common;
+    using Common.Core;
     using Microsoft.Extensions.Logging;
     using Model;
 
-    public abstract class OutputProcessExecutor
+    public class OutputProcessExecutor
     {
         protected readonly StringBuilder OutputBuilder;
 
-        protected readonly Process ProcessInstance;
+        public readonly Process ProcessInstance;
 
         protected readonly ILogger Logger;
 
-        protected OutputProcessExecutor(Process process,
+        public OutputProcessExecutor(Process process,
              ProcessInstructions instructions, ILogger logger)
         {
             ProcessInstance = Check.NotNull<Process>(process);
@@ -25,7 +25,7 @@
 
         public string Output => OutputBuilder.ToString();
 
-        protected ProcessInstructions Instructions { get; set; }
+        public ProcessInstructions Instructions { get; set; }
 
         public void Execute()
         {

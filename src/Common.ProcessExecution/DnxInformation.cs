@@ -1,17 +1,14 @@
-﻿namespace ProcessExecution
+﻿namespace Common.ProcessExecution
 {
-    using System.Diagnostics;
-    using System.IO;   
+    using System.IO;
 
     public static class DnxInformation
     {
-        private const int DnxProcessModuleIndex = 0;
         private const string DnuProgramName = "dnu.cmd";
 
         public static string DnxPath
             =>
-                Process.GetCurrentProcess().Modules[DnxProcessModuleIndex]
-                    .FileName;
+                @"C:\Users\mika\.dnx\runtimes\dnx-clr-win-x86.1.0.0-rc1-final\bin\dnx.exe";
 
         public static string DnuPath => Path.Combine(DnxDirectory, DnuProgramName);
 
