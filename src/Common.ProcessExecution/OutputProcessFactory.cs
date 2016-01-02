@@ -3,26 +3,23 @@
     using System.Diagnostics;
     using Model;
 
-    internal class OutputProcessFactory
+    public class OutputProcessFactory : IOutputProcessFactory
     {
-        public OutputProcessFactory(ProcessInstructions instructions)
+        public Process Create(ProcessInstructions instructions)
         {
-            _instructions = instructions;
+            var startInfo = new ProcessStartInfo
+            {
+                UseShellExecute = false,
+                FileName = instructions.Program,
+                Arguments = instructions.Arguments,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+
+            return new Process { StartInfo = startInfo };
         }
 
-        private ProcessStartInfo StartInfo => new ProcessStartInfo
-        {
-            UseShellExecute = false,
-            FileName = _instructions.Program,
-            Arguments = _instructions.Arguments,
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true
-        };
-
-        private readonly ProcessInstructions _instructions;
-
-        public Process Create() => new Process{StartInfo = StartInfo};
-
     }
+
 }

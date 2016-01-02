@@ -2,31 +2,52 @@
 {
     using System;
     using System.Diagnostics;
+    using Common.Core;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Model;
 
     public class ProcessProviderServices
     {
-        public Process OutputProcess(ProcessInstructions instructions)
-            => new OutputProcessFactory(instructions).Create();
-        
-        public OutputProcessExecutor OutputProcessExecutor(ProcessInstructions instructions, ILogger logger)=>
-          new OutputProcessExecutor(OutputProcess(instructions), instructions, logger);
+        private readonly IServiceProvider _serviceProvider;
 
-        public FinishingProcessExecutor FinishingProcessExecutor(ProcessInstructions instructions, ILogger logger, Func<string, bool> failurePredicate) => 
-            new FinishingProcessExecutor(OutputProcessExecutor(instructions, logger), failurePredicate);
-
-        public LivingProcessExecutor LivingProcessExecutor(ProcessInstructions instructions, ILogger logger)=>
-            new LivingProcessExecutor(OutputProcess(instructions), instructions, logger);
-            
-        public FinishingProcessExecutor FinishingExecutor(string program, string arguments, ILogger logger, Func<string, bool> failurePredicate)
+        public ProcessProviderServices()
         {
-            var instructions = new ProcessInstructions
+            _serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .AddTransient<IOutputProcessFactory, OutputProcessFactory>()
+                .AddTransient<OutputProcessExecutor>()
+                .BuildServiceProvider();
+
+            _serviceProvider.GetService<ILoggerFactory>().AddConsole().MinimumLevel = LogLevel.Information;
+        }
+
+        public OutputProcessExecutor OutputProcessExecutor(ProcessInstructions instructions)
+        {
+            var outputProcessExecutor = _serviceProvider.GetService<OutputProcessExecutor>();
+
+            outputProcessExecutor.ProcessInstance = Check.NotNull<Process>(_serviceProvider.GetService<IOutputProcessFactory>().Create(instructions));
+            return outputProcessExecutor;
+        }
+
+        public ProcessInstructions ProcessInstructions(string program, string arguments) =>
+            new ProcessInstructions
             {
                 Program = program,
                 Arguments = arguments
             };
-            return FinishingProcessExecutor(instructions, logger, failurePredicate);
+
+
+        public IExecutor FinishingExecutor(string program, string arguments, Func<string, bool> failurePredicate)
+        {
+            var instructions = ProcessInstructions(program, arguments);
+            return new FinishingProcessExecutor(OutputProcessExecutor(instructions), failurePredicate) { Instructions = instructions };
+        }
+
+        public LongRunningExecutor LivingExecutor(string program, string arguments)
+        {
+            var instructions = ProcessInstructions(program, arguments);
+            return new LongRunningExecutor(OutputProcessExecutor(instructions));
         }
     }
 }

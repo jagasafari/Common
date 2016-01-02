@@ -1,11 +1,6 @@
 ﻿namespace Common.ProcessExecution
 {
-    using System;
-    using System.Diagnostics;
-    using Microsoft.Extensions.Logging;
-    using Model;
-
-    public class LivingProcessExecutor : IExecutor, IDisposable
+    public class LongRunningExecutor : ILongRunningExecutor
     {
         private OutputProcessExecutor _executor;
 
@@ -17,10 +12,9 @@
             }
         }
 
-        public LivingProcessExecutor(Process process, 
-                ProcessInstructions instructions, ILogger logger)
+        public LongRunningExecutor(OutputProcessExecutor executor)
         {
-            _executor = new OutputProcessExecutor(process, instructions, logger);
+            _executor = executor;
         }
         
         public void Execute()

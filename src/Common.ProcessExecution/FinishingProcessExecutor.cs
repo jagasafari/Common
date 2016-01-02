@@ -1,6 +1,7 @@
 ﻿namespace Common.ProcessExecution
 {
     using System;
+    using Common.ProcessExecution.Model;
 
     public class FinishingProcessExecutor : IExecutor
     {
@@ -21,17 +22,19 @@
                 return _executor.Output;
             }
         }
-
+        
+        public ProcessInstructions Instructions { get; set; }
+        
         public void Execute()
         {
             _executor.Execute();
             
             if (!WaitForExit())
-                throw new ProcessFailiureException(_executor.Instructions,
+                throw new ProcessFailiureException(Instructions,
                     _executor.Output);
 
             if (_failurePredicate(_executor.Output))
-                throw new ProcessFailiureException(_executor.Instructions, _executor.Output);
+                throw new ProcessFailiureException(Instructions, _executor.Output);
         }
         
         private bool WaitForExit()

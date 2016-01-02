@@ -2,30 +2,23 @@
 {
     using System.Diagnostics;
     using System.Text;
-    using Common.Core;
     using Microsoft.Extensions.Logging;
-    using Model;
 
     public class OutputProcessExecutor
     {
         protected readonly StringBuilder OutputBuilder;
 
-        public readonly Process ProcessInstance;
+        public Process ProcessInstance {get;set;}
 
-        protected readonly ILogger Logger;
+        protected readonly ILogger<OutputProcessExecutor> Logger;
 
-        public OutputProcessExecutor(Process process,
-             ProcessInstructions instructions, ILogger logger)
+        public OutputProcessExecutor(ILogger<OutputProcessExecutor> logger)
         {
-            ProcessInstance = Check.NotNull<Process>(process);
-            Instructions = Check.NotNull<ProcessInstructions>(instructions);
-            Logger = Check.NotNull<ILogger>(logger);
+            Logger = logger;
             OutputBuilder = new StringBuilder();
         }
 
         public string Output => OutputBuilder.ToString();
-
-        public ProcessInstructions Instructions { get; set; }
 
         public void Execute()
         {
