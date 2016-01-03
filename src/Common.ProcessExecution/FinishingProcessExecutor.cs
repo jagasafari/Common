@@ -1,6 +1,7 @@
 ﻿namespace Common.ProcessExecution
 {
     using System;
+    using Common.ProcessExecution.Abstraction;
     using Common.ProcessExecution.Model;
 
     public class FinishingProcessExecutor : IExecutor

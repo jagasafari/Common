@@ -1,4 +1,6 @@
-﻿namespace Common.ProcessExecution
+﻿using Common.ProcessExecution.Abstraction;
+
+namespace Common.ProcessExecution
 {
     public class LongRunningExecutor : ILongRunningExecutor
     {

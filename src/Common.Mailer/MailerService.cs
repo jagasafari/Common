@@ -5,14 +5,14 @@
     using System.Net.Mail;
     using Model;
 
-    public class Mailer
+    public class MailService : IMailService
     {
         private readonly MailConfiguration _mailConfiguration;
 
         private readonly Func<string, string> _formatSubject;
         private MailMessage _mailMessage;
 
-        public Mailer(MailConfiguration mailConfiguration,
+        public MailService(MailConfiguration mailConfiguration,
             Func<string, string> formatSubject)
         {
             _mailConfiguration = mailConfiguration;
@@ -27,7 +27,7 @@
             }
         }
 
-        public Mailer BuildMailMessage(string subject, string content)
+        public MailService BuildMailMessage(string subject, string content)
         {
             _mailMessage = new MailMessage(_mailConfiguration.Sender,
                 _mailConfiguration.Receiver, _formatSubject(subject),

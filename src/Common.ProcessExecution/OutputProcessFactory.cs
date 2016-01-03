@@ -1,9 +1,10 @@
 ﻿namespace Common.ProcessExecution
 {
     using System.Diagnostics;
+    using Common.ProcessExecution.Abstraction;
     using Model;
 
-    public class OutputProcessFactory : IOutputProcessFactory
+    public class OutputProcessFactory : IProcessFactory
     {
         public Process Create(ProcessInstructions instructions)
         {
