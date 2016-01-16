@@ -4,7 +4,7 @@
     using Common.ProcessExecution.Abstraction;
     using Model;
 
-    public class OutputProcessFactory : IProcessFactory
+    public class ProcessFactory : IProcessFactory
     {
         public Process Create(ProcessInstructions instructions)
         {
@@ -17,7 +17,7 @@
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
-
+            
             return new Process { StartInfo = startInfo };
         }
 

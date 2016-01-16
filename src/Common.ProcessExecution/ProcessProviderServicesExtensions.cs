@@ -6,8 +6,8 @@ namespace Common.ProcessExecution
         public static IServiceCollection AddProceesProviderServices(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .AddTransient<IProcessFactory, OutputProcessFactory>()
-                .AddTransient<OutputProcessExecutor>()
+                .AddTransient<IProcessFactory, ProcessFactory>()
+                .AddTransient<IOutputProcessExecutor, OutputProcessExecutor>()
                 .AddTransient<IFinishingExecutorFactory, FinishingExecutorFactory>()
                 .AddTransient<ILongRunningExecutorFactory, LongRunningExecutorFactory>();
         }

@@ -2,43 +2,44 @@
 {
     using System.Diagnostics;
     using System.Text;
+    using Common.Core;
+    using Common.ProcessExecution.Abstraction;
     using Microsoft.Extensions.Logging;
 
-    public class OutputProcessExecutor
+    public class OutputProcessExecutor : IOutputProcessExecutor
     {
-        protected readonly StringBuilder OutputBuilder;
+        private readonly StringBuilder _outputBuilder;
 
-        public Process ProcessInstance {get;set;}
-
+        private Process _process;
         protected readonly ILogger<OutputProcessExecutor> Logger;
 
         public OutputProcessExecutor(ILogger<OutputProcessExecutor> logger)
         {
             Logger = logger;
-            OutputBuilder = new StringBuilder();
+            _outputBuilder = new StringBuilder();
         }
 
-        public string Output => OutputBuilder.ToString();
+        public Process ProcessInstance { get { return _process; } set { _process = Check.NotNull(value, nameof(value)); } }
+
+        public string Output => _outputBuilder.ToString();
 
         public void Execute()
         {
             ProcessInstance.OutputDataReceived +=
                 (sender, e) =>
                 {
-                    var data = e?.Data??string.Empty;
-                    OutputBuilder.AppendLine(data);
+                    var data = e?.Data ?? string.Empty;
+                    _outputBuilder.AppendLine(data);
                     Logger.LogInformation(data);
                 };
             ProcessInstance.ErrorDataReceived +=
                 (sender, e) =>
                 {
-                    var data = e?.Data??string.Empty;
-                    OutputBuilder.AppendLine(data);
+                    var data = e?.Data ?? string.Empty;
+                    _outputBuilder.AppendLine(data);
                     Logger.LogError(data);
                 };
-            ProcessInstance.Exited += (sender, e) => { 
-                Logger.LogInformation("process exited");
-            };
+            ProcessInstance.Exited += (sender, e) => Logger.LogInformation("process exited");
             ProcessInstance.EnableRaisingEvents = true;
 
             ProcessInstance.Start();

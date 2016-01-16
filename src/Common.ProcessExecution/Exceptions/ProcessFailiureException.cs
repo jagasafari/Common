@@ -1,4 +1,4 @@
-﻿namespace Common.ProcessExecution
+﻿namespace Common.ProcessExecution.Exceptions
 {
     using System;
     using Model;

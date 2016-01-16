@@ -5,9 +5,9 @@ namespace Common.ProcessExecution{
 
     public class FinishingExecutorFactory : IFinishingExecutorFactory
     {
-        private OutputProcessExecutor _outputProcessExecutor;
+        private IOutputProcessExecutor _outputProcessExecutor;
         private IProcessFactory _processFactory;
-        public FinishingExecutorFactory(OutputProcessExecutor outputProcessExecutor,
+        public FinishingExecutorFactory(IOutputProcessExecutor outputProcessExecutor,
             IProcessFactory processFactory)
         {
             _outputProcessExecutor = outputProcessExecutor;

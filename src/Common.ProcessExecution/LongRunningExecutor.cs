@@ -1,0 +1,46 @@
+﻿using Common.ProcessExecution.Abstraction;
+using Common.ProcessExecution.Model;
+
+namespace Common.ProcessExecution
+{
+    public class LongRunningExecutor : ILongRunningExecutor
+    {
+        private IOutputProcessExecutor _executor;
+        private readonly IProcessFactory _processFactory;
+        private readonly ProcessInstructions _instructions;
+
+        public string Output
+        {
+            get
+            {
+                return _executor.Output;
+            }
+        }
+
+        public LongRunningExecutor(ProcessInstructions instructions, IProcessFactory processFactory, 
+            IOutputProcessExecutor outputProcessExecutor)
+        {
+            _processFactory = processFactory;
+            _instructions = instructions;
+            _executor = outputProcessExecutor;
+        }
+
+        public void Execute()
+        {
+            if(_executor.ProcessInstance==null)
+            {
+                _executor.ProcessInstance = _processFactory.Create(_instructions);
+            }
+            _executor.Execute();
+        }
+
+        public void Dispose()
+        {
+            if (_executor.ProcessInstance != null)
+            {
+                _executor.ProcessInstance.Kill();
+                _executor.ProcessInstance.Dispose();
+            }
+        }
+    }
+}

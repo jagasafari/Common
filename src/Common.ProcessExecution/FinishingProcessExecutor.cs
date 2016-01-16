@@ -2,14 +2,15 @@
 {
     using System;
     using Common.ProcessExecution.Abstraction;
+    using Common.ProcessExecution.Exceptions;
     using Common.ProcessExecution.Model;
 
     public class FinishingProcessExecutor : IExecutor
     {
-        private OutputProcessExecutor _executor;
+        private IOutputProcessExecutor _executor;
         private readonly Func<string, bool> _failurePredicate;
 
-        public FinishingProcessExecutor(OutputProcessExecutor executor,
+        public FinishingProcessExecutor(IOutputProcessExecutor executor,
             Func<string, bool> failurePredicate)
         {
             _executor = executor;

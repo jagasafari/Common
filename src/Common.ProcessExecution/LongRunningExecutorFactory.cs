@@ -5,10 +5,10 @@ namespace Common.ProcessExecution{
 
     public class LongRunningExecutorFactory : ILongRunningExecutorFactory
     {
-        private OutputProcessExecutor _outputProcessExecutor;
+        private IOutputProcessExecutor _outputProcessExecutor;
         private IProcessFactory _processFactory;
         
-        public LongRunningExecutorFactory(OutputProcessExecutor outputProcessExecutor,
+        public LongRunningExecutorFactory(IOutputProcessExecutor outputProcessExecutor,
             IProcessFactory processFactory)
         {
             _outputProcessExecutor = outputProcessExecutor;
@@ -23,9 +23,8 @@ namespace Common.ProcessExecution{
                 Program = program,
                 Arguments = arguments
             };
-            
-            _outputProcessExecutor.ProcessInstance = _processFactory.Create(instructions);
-            return new LongRunningExecutor(_outputProcessExecutor);
+            //make it lazy
+            return new LongRunningExecutor(instructions, _processFactory, _outputProcessExecutor);
         }
     }
 }

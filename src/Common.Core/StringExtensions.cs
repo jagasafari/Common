@@ -1,7 +1,6 @@
-using System.IO;
-
 namespace Common.Core
 {
+    using System.IO;
     public static class StringExtensions
     {
         public static string GetParentDirectory(this string fullPath, int parentLevel)
