@@ -10,5 +10,19 @@ namespace Common.Core
                 parentPath = Directory.GetParent(parentPath).FullName;
             return parentPath;
         }
+
+        public static void ClearFolder(this string folderName)
+        {
+            var folderInfo = new DirectoryInfo(folderName);
+
+            foreach (var fileInfo in folderInfo.GetFiles())
+                fileInfo.Delete();
+
+            foreach (var subFolderInfo in folderInfo.GetDirectories())
+            {
+                subFolderInfo.FullName.ClearFolder();
+                subFolderInfo.Delete();
+            }
+        }
     }
 }

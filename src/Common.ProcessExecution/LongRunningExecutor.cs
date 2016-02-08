@@ -9,28 +9,25 @@ namespace Common.ProcessExecution
         private readonly IProcessFactory _processFactory;
         private readonly ProcessInstructions _instructions;
 
-        public string Output
-        {
-            get
-            {
-                return _executor.Output;
-            }
-        }
+        public string Output => _executor.Output;
 
-        public LongRunningExecutor(ProcessInstructions instructions, IProcessFactory processFactory, 
-            IOutputProcessExecutor outputProcessExecutor)
+        public LongRunningExecutor(IProcessFactory processFactory, IOutputProcessExecutor outputProcessExecutor)
         {
             _processFactory = processFactory;
-            _instructions = instructions;
             _executor = outputProcessExecutor;
         }
 
-        public void Execute()
+        public void Execute(string program, string arguments)
         {
-            if(_executor.ProcessInstance==null)
+            var instructions = new ProcessInstructions
             {
-                _executor.ProcessInstance = _processFactory.Create(_instructions);
-            }
+                Program = program,
+                Arguments = arguments
+            };
+
+            if (_executor.ProcessInstance == null)
+                _executor.ProcessInstance = _processFactory.Create(instructions);
+                
             _executor.Execute();
         }
 

@@ -8,8 +8,9 @@ namespace Common.ProcessExecution
             return serviceCollection
                 .AddTransient<IProcessFactory, ProcessFactory>()
                 .AddTransient<IOutputProcessExecutor, OutputProcessExecutor>()
-                .AddTransient<IFinishingExecutorFactory, FinishingExecutorFactory>()
-                .AddTransient<ILongRunningExecutorFactory, LongRunningExecutorFactory>();
+                .AddTransient<IFinishingProcessExecutor, FinishingProcessExecutor>()
+                .AddTransient<ILongRunningExecutor, LongRunningExecutor>()
+                .AddSingleton<IProcessExecutorProvider, ProcessExecutorProvider>();
         }
     }
 }

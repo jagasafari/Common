@@ -1,5 +1,6 @@
 ﻿namespace Common.ProcessExecution
 {
+    using System;
     using System.Diagnostics;
     using System.Text;
     using Common.Core;
@@ -11,11 +12,11 @@
         private readonly StringBuilder _outputBuilder;
 
         private Process _process;
-        protected readonly ILogger<OutputProcessExecutor> Logger;
+        private readonly ILogger<OutputProcessExecutor> _logger;
 
         public OutputProcessExecutor(ILogger<OutputProcessExecutor> logger)
         {
-            Logger = logger;
+            _logger = logger;
             _outputBuilder = new StringBuilder();
         }
 
@@ -25,21 +26,19 @@
 
         public void Execute()
         {
-            ProcessInstance.OutputDataReceived +=
-                (sender, e) =>
+            ProcessInstance.OutputDataReceived += (sender, e) =>
                 {
                     var data = e?.Data ?? string.Empty;
                     _outputBuilder.AppendLine(data);
-                    Logger.LogInformation(data);
+                    Console.WriteLine(data);
                 };
-            ProcessInstance.ErrorDataReceived +=
-                (sender, e) =>
+            ProcessInstance.ErrorDataReceived += (sender, e) =>
                 {
                     var data = e?.Data ?? string.Empty;
                     _outputBuilder.AppendLine(data);
-                    Logger.LogError(data);
+                    _logger.LogError(data);
                 };
-            ProcessInstance.Exited += (sender, e) => Logger.LogInformation("process exited");
+            ProcessInstance.Exited += (sender, e) => _logger.LogInformation("process exited");
             ProcessInstance.EnableRaisingEvents = true;
 
             ProcessInstance.Start();

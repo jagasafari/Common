@@ -5,40 +5,40 @@
     using Common.ProcessExecution.Exceptions;
     using Common.ProcessExecution.Model;
 
-    public class FinishingProcessExecutor : IExecutor
+    public class FinishingProcessExecutor : IFinishingProcessExecutor
     {
         private IOutputProcessExecutor _executor;
         private readonly Func<string, bool> _failurePredicate;
+        private readonly IProcessFactory _processFactory;
 
-        public FinishingProcessExecutor(IOutputProcessExecutor executor,
-            Func<string, bool> failurePredicate)
+        public FinishingProcessExecutor(IOutputProcessExecutor executor, IProcessFactory processFactory)
         {
             _executor = executor;
-            _failurePredicate = failurePredicate;
+            _processFactory = processFactory;
         }
+        
+        public string Output => _executor.Output;
 
-        public string Output
+        public void Execute(string program, string arguments, Func<string, bool> failurePredicate)
         {
-            get
+            var instruction = new ProcessInstructions
             {
-                return _executor.Output;
-            }
-        }
-        
-        public ProcessInstructions Instructions { get; set; }
-        
-        public void Execute()
-        {
-            _executor.Execute();
-            
-            if (!WaitForExit())
-                throw new ProcessFailiureException(Instructions,
-                    _executor.Output);
+                Program = program,
+                Arguments = arguments
+            };
 
-            if (_failurePredicate(_executor.Output))
-                throw new ProcessFailiureException(Instructions, _executor.Output);
+            if (_executor.ProcessInstance == null)
+                _executor.ProcessInstance = _processFactory.Create(instruction);
+
+            _executor.Execute();
+
+            if (!WaitForExit())
+                throw new ProcessFailiureException(instruction, _executor.Output);
+
+            if (failurePredicate(_executor.Output))
+                throw new ProcessFailiureException(instruction, _executor.Output);
         }
-        
+
         private bool WaitForExit()
         {
             _executor.ProcessInstance.WaitForExit();
